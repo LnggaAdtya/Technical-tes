@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number to Words Converter</title>
+</head>
+<body>
+    <form id="numberForm">
+        <label for="numberInput">Masukkan Angka (maksimal 6 digit):</label>
+        <input type="number" id="numberInput" name="numberInput" max="999999"><br><br>
+
+        <button type="button" onclick="convertNumberToWords()">Konversi</button>
+    </form>
+
+    <p id="wordsOutput"></p>
+
+    <script>
+        const units = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan"];
+        const teens = ["sepuluh", "sebelas", "dua belas", "tiga belas", "empat belas", "lima belas", "enam belas", "tujuh belas", "delapan belas", "sembilan belas"];
+        const tens = ["", "", "dua puluh", "tiga puluh", "empat puluh", "lima puluh", "enam puluh", "tujuh puluh", "delapan puluh", "sembilan puluh"];
+        const thousands = ["", "ribu", "juta"];
+
+        function convertNumberToWords() {
+            let num = parseInt(document.getElementById('numberInput').value);
+            if (isNaN(num) || num > 999999) {
+                alert("Masukkan angka yang valid (maksimal 6 digit).");
+                return;
+            }
+
+            let words = "";
+            let i = 0;
+
+            while (num > 0) {
+                let chunk = num % 1000;
+                if (chunk > 0) {
+                    words = convertChunk(chunk) + thousands[i] + " " + words;
+                }
+                num = Math.floor(num / 1000);
+                i++;
+            }
+
+            document.getElementById('wordsOutput').textContent = words.trim();
+        }
+
+        function convertChunk(num) {
+            let chunkWords = "";
+
+            if (num > 99) {
+                chunkWords += units[Math.floor(num / 100)] + " ratus ";
+                num = num % 100;
+            }
+
+            if (num > 19) {
+                chunkWords += tens[Math.floor(num / 10)] + " ";
+                num = num % 10;
+            } else if (num > 9) {
+                chunkWords += teens[num - 10] + " ";
+                num = 0;
+            }
+
+            chunkWords += units[num];
+
+            return chunkWords.trim() + " ";
+        }
+    </script>
+</body>
+</html>
